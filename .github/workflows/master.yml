@@ -97,7 +97,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${{ env.VERSION }}" --target master --title "Build ${{ env.VERSION }}" --generate-notes
+          gh release create "${{ env.VERSION }}" --target master --title "Build ${{ env.VERSION }}" # --generate-notes
       - name: Upload
         env:
           GH_TOKEN: ${{ github.token }}
