@@ -17,14 +17,14 @@ namespace CursorConverter.ViewModels
     public partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
-        public Methods.ChosenFormat _myChosenFormat = Methods.ChosenFormat.Ani;
+        private Methods.ChosenFormat _myChosenFormat = Methods.ChosenFormat.Ani;
 
 
         [ObservableProperty]
-        public string _outFolder = Directory.GetCurrentDirectory().ToString();
+        private string _outFolder = Directory.GetCurrentDirectory().ToString();
 
         [ObservableProperty]
-        public string _logText = "";
+        private string _logText = "";
 
         public ObservableCollection<String> ListOfFiles { get; set; }
 

@@ -13,8 +13,8 @@
 	<PublishSingleFile>true</PublishSingleFile>
 	<PackageProjectUrl>https://github.com/Neurofibromin/CursorConverter</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/Neurofibromin/CursorConverter</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>  
-	  <!--	  <PublishTrimmed>true</PublishTrimmed> trimming is currently problematic with Avalonia -->
+	<RepositoryType>git</RepositoryType>
+    <PublishTrimmed>true</PublishTrimmed>  <!--	  trimming is currently problematic with Avalonia -->
 	<Version>0.1.0</Version>
 	  
 	  
