@@ -3,6 +3,15 @@ releases.txt
 *.AppImage
 *.deb 
 *.rpm
+*.ani
+*.ico
+*.xcg
+*.cur
+*.png
+*.jpg
+*.hyprcursor
+*.cursorfx
+*.curxptheme
 
 ################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.

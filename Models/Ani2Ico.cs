@@ -11,7 +11,7 @@ namespace CursorConverter.Models
         * Extract .ico images from .ani animated Windows cursors.   
           rewritten to c# by Neurofibromin */
 
-        public static void Ani2IcoMain(string filepath, string targetpath)
+        public static void Ani2IcoMain(string filepath, string outdirectory)
         {
             if (!File.Exists(filepath))
             {
@@ -20,7 +20,7 @@ namespace CursorConverter.Models
             }
             try
             {
-                ReadFile(filepath, targetpath);
+                ReadFile(filepath, outdirectory);
             }
             catch (FileNotFoundException) { }
             catch (FileLoadException) { }
@@ -34,7 +34,7 @@ namespace CursorConverter.Models
                    buffer[start + 2] == 0x6f && buffer[start + 3] == 0x6e;
         }
 
-        static void ReadFile(string name, string targetpath)
+        static void ReadFile(string name, string outdirectory)
         {
             if (!name.EndsWith(".ani", StringComparison.OrdinalIgnoreCase))
             {
@@ -72,7 +72,7 @@ namespace CursorConverter.Models
 
                     try
                     {
-                        using (FileStream icoImage = new FileStream(Path.Combine(targetpath, newIcoName), FileMode.Create, FileAccess.Write))
+                        using (FileStream icoImage = new FileStream(Path.Combine(outdirectory, newIcoName), FileMode.Create, FileAccess.Write))
                         {
                             j = 8;
                             while (i + j + 4 <= fileLen)
