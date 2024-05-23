@@ -34,5 +34,6 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Magick.NET-Q16-HDRI-AnyCPU" Version="13.8.0" />
+    <PackageReference Include="Tommy" Version="3.1.2" />
   </ItemGroup>
 </Project>

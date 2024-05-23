@@ -18,14 +18,11 @@ namespace CursorConverter.Models
                 Console.Error.WriteLine("Please give an .ani filename as an argument.");
                 return;
             }
-            try
-            {
-                ReadFile(filepath, outdirectory);
-            }
-            catch (FileNotFoundException) { }
-            catch (FileLoadException) { }
-            catch (IOException) { }
-            // TODO
+            
+            
+            ReadFile(filepath, outdirectory);
+            
+            
         }
 
         static bool TestForIconString(byte[] buffer, int start)

@@ -23,7 +23,7 @@ namespace CursorConverter
 
         public enum ChosenFormat
         {
-            Ani, Ico, XCursor, hyprcursor, Cur, CursorFX, CurXPTheme, Png
+            Ani, Ico, XCursor, Cur, Png, Jpg, hyprcursor, CursorFX, CurXPTheme,
         }
 
         public static List<string> AllFiles(string FolderToSerach)

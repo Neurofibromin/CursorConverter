@@ -12,6 +12,10 @@ releases.txt
 *.hyprcursor
 *.cursorfx
 *.curxptheme
+*.c 
+*.cpp 
+*.h 
+*.hpp
 
 ################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
