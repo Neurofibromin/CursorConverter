@@ -27,7 +27,9 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}  
     - name: Restore dependencies
-      run: dotnet restore
+      run: |
+        dotnet workload restore
+        dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
@@ -55,29 +57,32 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Restore dependencies
-        run: dotnet restore
+        run: | 
+          dotnet workload restore
+          dotnet restore
       - name: Publish
         run: |
-          dotnet publish CursorConverter.csproj --configuration Release --runtime win-x64 --self-contained
-          dotnet publish CursorConverter.csproj --configuration Release --runtime win-x86 --self-contained
-          dotnet publish CursorConverter.csproj --configuration Release --runtime win-arm64 --self-contained
-          dotnet publish CursorConverter.csproj --configuration Release --runtime linux-x64 --self-contained
-          dotnet publish CursorConverter.csproj --configuration Release --runtime linux-arm64 --self-contained 
-          dotnet publish CursorConverter.csproj --configuration Release --runtime osx-x64 --self-contained
-          dotnet publish CursorConverter.csproj --configuration Release --runtime osx-arm64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-x86 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-arm64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime linux-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime linux-arm64 --self-contained 
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime osx-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime osx-arm64 --self-contained
       - name: "List all files"
         run: |
           echo $PWD
           ls -R
       - name: "Rename based on architecture"
         run: |
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-x64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-x64/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-x86/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-x86/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/linux-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/linux-arm64/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/linux-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/linux-x64/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/osx-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/osx-x64/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/osx-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/osx-arm64/publish/CursorConverter-osx-arm64"
-          mv "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-arm64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/CursorConverter/bin/Release/net8.0/win-arm64/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe"
+          mkdir "/home/runner/work/CursorConverter/publish"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x86/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-osx-arm64"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-arm64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe"
       - name: "Delete old release"
         env:
           GH_TOKEN: ${{ github.token }}
@@ -102,13 +107,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/win-x64/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/win-x86/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/linux-arm64/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/linux-x64/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/osx-x64/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/osx-arm64/publish/CursorConverter-osx-arm64" --clobber
-          gh release upload "${{ env.VERSION }}" "./bin/Release/net8.0/win-arm64/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-osx-arm64" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe" --clobber
 
 
 
