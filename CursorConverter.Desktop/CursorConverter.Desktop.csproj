@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+	<ImplicitUsings>enable</ImplicitUsings>
+	<SelfContained>true</SelfContained>
+	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+	<PublishSingleFile>true</PublishSingleFile>
+	<PackageProjectUrl>https://github.com/Neurofibromin/CursorConverter</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/Neurofibromin/CursorConverter</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+    <PublishTrimmed>true</PublishTrimmed>  <!--	  trimming is currently problematic with Avalonia -->
+	<Version>0.1.0</Version>
+
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CursorConverter\CursorConverter.csproj" />
+  </ItemGroup>
+</Project>

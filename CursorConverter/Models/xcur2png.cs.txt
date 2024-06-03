@@ -1,0 +1,108 @@
+﻿using System.Drawing.Imaging;
+using System;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+
+namespace CursorConverter.Models;
+
+// based on xcur2png by eworm-de
+enum DIR_STATE
+{
+    NON,
+    UP,
+    DOWN,
+    DEAD
+}
+struct dirNameS
+{
+    int state;   /* NON, UP, DOWN, DEAD. NON means end of the array of dirNameS. */
+    string dirp;  /* pointer to directory name. used only if state is DOWN. */
+    int length;  /* length of directory name, used only if state is DOWN. */
+}
+
+class xcur2png
+{
+    const int PROGRESS_SHARPS = 50;
+    const int PNG_SETJMP_NOT_SUPPORTED = 1;
+    static void writePngFileFromXcur()
+    {
+        
+            for (int i = 0; i < width * height; i++)
+            {
+                uint pixel = pixels[i];
+                int alpha = (int)(pixel >> 24) & 0xff;
+                int red = (int)(pixel >> 16) & 0xff;
+                int green = (int)(pixel >> 8) & 0xff;
+                int blue = (int)pixel & 0xff;
+
+                if (alpha != 0)
+                {
+                    red = (red * 256 / alpha) & 0xff;
+                    green = (green * 256 / alpha) & 0xff;
+                    blue = (blue * 256 / alpha) & 0xff;
+                }
+
+                Color color = Color.FromArgb(alpha, red, green, blue);
+                bitmap.SetPixel(i % width, i / width, color);
+            }
+
+            bitmap.Save(pngName, ImageFormat.Png);
+        
+    }
+
+    static int saveConfAndPNGs(XcursorImages xcIs, string xcurFilePart, int suffix, StreamWriter conffp, string imagePrefix, string outdir)
+    {
+        int count = 0;
+
+        for (int i = suffix; count < xcIs.nimage; ++i, ++count)
+        {
+            var image = xcIs.images[count];
+            uint version = image.version;
+            int size = image.size;
+            int width = image.width;
+            int height = image.height;
+            int xhot = image.xhot;
+            int yhot = image.yhot;
+            uint delay = image.delay;
+            uint[] pixels = image.pixels;
+
+            string pngName = Path.Combine(outdir, $"{imagePrefix}{xcurFilePart}_{i:000}.png");
+
+            conffp.WriteLine($"{size}\t{xhot}\t{yhot}\t{pngName}\t{delay}");
+            WritePngFileFromXcur(width, height, pixels, pngName);
+        }
+
+        return 0;
+    }
+
+    static void Main(string[] args)
+    {
+        if (args.Length < 6)
+        {
+            Console.WriteLine("Usage: program <cursor> <raw_name> <suffix> <conf_strm> <prefix> <out>");
+            return;
+        }
+
+        string cursor = args[0];
+        string raw_name = args[1];
+        int suffix = int.Parse(args[2]);
+        string conf_strm = args[3];
+        string prefix = args[4];
+        string outdir = args[5];
+
+        XcursorImages xcIs = XcursorFilenameLoadAllImages(cursor); // Assuming this is a valid method to load cursor images
+
+        using (StreamWriter conffp = new StreamWriter(conf_strm))
+        {
+            SaveConfAndPNGs(xcIs, raw_name, suffix, conffp, prefix, outdir);
+        }
+    }
+
+    // Assuming this method or equivalent functionality exists in the used library or is implemented elsewhere
+    static XcursorImages XcursorFilenameLoadAllImages(string cursor)
+    {
+        // Implementation to load Xcursor images
+        throw new NotImplementedException();
+    }
+}
