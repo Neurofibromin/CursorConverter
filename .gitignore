@@ -16,6 +16,7 @@ releases.txt
 *.cpp 
 *.h 
 *.hpp
+.idea/
 
 ################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.

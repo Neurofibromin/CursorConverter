@@ -13,7 +13,7 @@
 	<PackageProjectUrl>https://github.com/Neurofibromin/CursorConverter</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/Neurofibromin/CursorConverter</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
-    <Version>0.1.0</Version>
+    <Version>0.1.3</Version>
 
   </PropertyGroup>
   

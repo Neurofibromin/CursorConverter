@@ -10,7 +10,7 @@ on:
 
 
 env:
-  VERSION: "0.1"
+  VERSION: "0.1.3"
 
 jobs:
   build:
@@ -39,7 +39,46 @@ jobs:
     - name: "List all files"
       run: ls -R
       
-        
+  webdeploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        dotnet-version: [ '8.0.x' ]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ${{ matrix.os }}
+    if: ${{ needs.build.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Restore dependencies
+        run: |
+          dotnet workload restore
+          dotnet restore
+      - name: Publish
+        run: |
+          dotnet publish CursorConverter.Browser/CursorConverter.Browser.csproj --configuration Release --self-contained true
+      - name: "List all files"
+        run: ls -R
+      - name: "Add nojekyll"
+        run: touch ./CursorConverter.Browser/bin/Release/net8.0-browser/browser-wasm/AppBundle/.nojekyll
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: './CursorConverter.Browser/bin/Release/net8.0-browser/browser-wasm/AppBundle'
+      - name: Deploy artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
     
   release:
       strategy:
@@ -75,14 +114,14 @@ jobs:
           ls -R
       - name: "Rename based on architecture"
         run: |
-          mkdir "/home/runner/work/CursorConverter/publish"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x86/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-x64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-arm64/publish/CursorConverter" "/home/runner/work/CursorConverter/publish/CursorConverter-osx-arm64"
-          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-arm64/publish/CursorConverter.exe" "/home/runner/work/CursorConverter/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe"
+          mkdir "/home/runner/work/CursorConverter/CursorConverter/publish"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x64/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x86/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-arm64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-x64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-x64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-arm64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-osx-arm64"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-arm64/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe"
       - name: "Delete old release"
         env:
           GH_TOKEN: ${{ github.token }}
@@ -139,7 +178,9 @@ jobs:
           sudo flatpak install -y flathub org.freedesktop.Platform//23.08 org.freedesktop.Sdk//23.08
           dotnet tool install -g KuiperZone.PupNet
       - name: Restore dependencies
-        run: dotnet restore
+        run: |
+          dotnet workload restore
+          dotnet restore
       - name: Publish
         run: |
           # dotnet publish CursorConverter.csproj --configuration Release --runtime win-x64 --self-contained
@@ -170,7 +211,4 @@ jobs:
           gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1.x86_64.rpm --clobber
 
           gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1_amd64.deb --clobber
-          gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1_arm64.deb --clobber
-            
-  
-  
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1_arm64.deb --clobber            
