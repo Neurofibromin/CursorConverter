@@ -27,6 +27,7 @@
                 <Label HorizontalAlignment="Center">FROM</Label>
                 <Button Command="{Binding OpenFileCommand}">Choose file(s)</Button>
                 <Button Command="{Binding OpenFolderCommand}">Choose folder</Button>
+                <!-- TODO: Instead of listbox use some grouped structure, that can highlight folders (maybe controls to deselect items?)  -->
                 <ListBox
                     Margin="-4"
                     Padding="-4"

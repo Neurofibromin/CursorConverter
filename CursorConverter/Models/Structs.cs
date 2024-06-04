@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace CursorConverter.Models
 {
+    class HyprBest
+    {
+        private int a = 1;
+    }
+    
     public enum eOperation
     {
         OPERATION_CREATE = 0,

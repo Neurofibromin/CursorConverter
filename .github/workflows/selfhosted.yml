@@ -1,12 +1,12 @@
-# This workflow will build a .NET project
+# This workflow will not work
 
-name: Master
+name: SelfHosted
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "notfound" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "notfound" ]
 
 
 env:
@@ -51,7 +51,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: [ self-hosted ]
-    if: false #${{ needs.build.result == 'success' }}
+    if: ${{ needs.build.result == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -86,7 +86,7 @@ jobs:
         fail-fast: false
       runs-on: [ self-hosted ]
       needs: [build]
-      if: false #${{ needs.build.result == 'success' }}
+      if: ${{ needs.build.result == 'success' }}
       steps:
       - uses: actions/checkout@v3
       - name: Setup dotnet

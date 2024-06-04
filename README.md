@@ -19,26 +19,27 @@ Convert **from** and **to**:
 
 ## Compatibility matrix
 
-| to &darr; \\ from &rarr; 	| ani		| ico	| xcg	| cur	| png	| jpg	| hyprcursor| cursorfx	| curxptheme|
+| to &darr; \\ from &rarr; | ani		| ico	| xcg	| cur	| png	| jpg	| hyprcursor| cursorfx	| curxptheme|
 |-------------------------	|-------	|-----	|-----	|-----	|-------|-----	|-----		|-----		|   -----	|
 | ani                     	| &check; 	|		|     	|   	|		|		|			|			|			|
-| ico		              	| &check;	|     	|     	|   	|		|		|			|			|			|
+| ico		              	| &check;	|&check;|     	|   	|		|		|			|			|			|
 | xcg                    	|		 	|     	|     	|   	|		|		|			|			|			|
-| cur                    	|		 	|     	|     	|   	|		|		|			|			|			|
-| png                    	|		 	|&check;|     	|   	|		|		|			|			|			|
-| jpg                    	|		 	|     	|     	|   	|		|		|			|			|			|
-| hyprcursor                |		 	|     	|     	|   	|		|		|			|			|			|
-| cursorfx                  |		 	|     	|     	|   	|		|		|			|			|			|
-| curxptheme                |		 	|     	|     	|   	|		|		|			|			|			|
+| cur                    	|		 	|     	|     	|&check;|		|		|			|			|			|
+| png                    	|		 	|&check;|     	|   	|&check;|		|			|			|			|
+| jpg                    	|		 	|     	|     	|   	|		|&check;|			|			|			|
+| hyprcursor               |		 	|     	|     	|   	|		|		|			|			|			|
+| cursorfx                 |		 	|     	|     	|   	|		|		|			|			|			|
+| curxptheme               |		 	|     	|     	|   	|		|		|			|			|			|
 
 
 ## Releases
 
-| Windows  | Linux | OSX (semi-supported) |
-| ------------- | ------------- | ------------- |
-| [x64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-x64-8.0.x.exe) | [x64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-linux-x64-8.0.x) | [x64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-osx-x64-8.0.x)
-| [x32](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-x86-8.0.x.exe) | N/A | N/A |
-| [arm64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-arm64-8.0.x.exe) | [arm64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-linux-arm64-8.0.x) | [arm64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-osx-arm64) |
+| | Windows  | Linux | OSX (semi-supported) |
+| ---- | ------------- | ------------- | ------------- |
+| x64 | [CursorConverter-win-x64-8.0.x.exe](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-x64-8.0.x.exe) | [CursorConverter-linux-x64-8.0.x](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-linux-x64-8.0.x) | [CursorConverter-osx-x64-8.0.x](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-osx-x64-8.0.x)
+| x86 (32-bit)| [CursorConverter-win-x86-8.0.x.exe](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-x86-8.0.x.exe) | N/A | N/A |
+| arm64 (aarch64) | [CursorConverter-win-arm64-8.0.x.exe](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-arm64-8.0.x.exe) | [CursorConverter-linux-arm64-8.0.x](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-linux-arm64-8.0.x) | [CursorConverter-osx-arm64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-osx-arm64) |
+
 
 Additional releases:
 | package  | x64 | arm64 |

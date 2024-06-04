@@ -64,7 +64,6 @@ namespace CursorConverter.ViewModels
 
         private async Task<IReadOnlyList<IStorageFile>?> DoOpenFilePickerAsync()
         {
-
             if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
                 desktop.MainWindow?.StorageProvider is not { } provider)
                 throw new NullReferenceException("Missing StorageProvider instance.");
@@ -152,7 +151,7 @@ namespace CursorConverter.ViewModels
         private async Task<IStorageFolder?> DoOpenFolderPickerOneAsync()
         {
             if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-                desktop.MainWindow?.StorageProvider is not { } provider)
+                desktop.MainWindow?.StorageProvider is not { } provider) //TODO: storageprovider does not seem to work in browser?
                 throw new NullReferenceException("Missing StorageProvider instance.");
 
             var result = await provider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
