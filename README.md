@@ -43,10 +43,10 @@ Convert **from** and **to**:
 Additional releases:
 | package  | x64 | arm64 |
 | ------------- | ------------- | ------------- |
-| Flatpak	|		[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.x86_64.flatpak)		|	[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.aarch64.flatpak)			|
-|    RPM	|		[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1.x86_64.rpm)		|	N/A			|
-|    DEB	|		[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1_amd64.deb)		|	[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1_arm64.deb)			|
-| AppImage	|		N/A		|	[](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.x86_64.AppImage)			|
+| Flatpak	|		[CursorConverter-0.1.3-1.x86_64.flatpak](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.x86_64.flatpak)		|	[CursorConverter-0.1.3-1.aarch64.flatpak](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.aarch64.flatpak)			|
+|    RPM	|		[CursorConverter_0.1.3-1.x86_64.rpm](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1.x86_64.rpm)		|	N/A			|
+|    DEB	|		[CursorConverter_0.1.3-1_amd64.deb](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1_amd64.deb)		|	[CursorConverter_0.1.3-1_arm64.deb](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter_0.1.3-1_arm64.deb)			|
+| AppImage	|		[CursorConverter-0.1.3-1.x86_64.AppImage](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.x86_64.AppImage)		|	[CursorConverter-0.1.3-1.aarch64.AppImage](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.aarch64.AppImage)			|
 
 
 ### Status

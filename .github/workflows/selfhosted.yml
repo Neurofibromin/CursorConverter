@@ -1,0 +1,211 @@
+# This workflow will build a .NET project
+
+name: Master
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+env:
+  VERSION: "0.1.3"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        dotnet-version: [ '8.0.x' ]
+    runs-on: [ self-hosted ]
+    if: true
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}  
+    - name: Restore dependencies
+      run: |
+        dotnet workload restore
+        dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Display dotnet version
+      run: dotnet --version
+    - name: "List all files"
+      run: ls -R
+      
+  webdeploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    needs: [build]
+    strategy:
+      matrix:
+        dotnet-version: [ '8.0.x' ]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: [ self-hosted ]
+    if: false #${{ needs.build.result == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Restore dependencies
+        run: |
+          dotnet workload restore
+          dotnet restore
+      - name: Publish
+        run: |
+          dotnet publish CursorConverter.Browser/CursorConverter.Browser.csproj --configuration Release --self-contained true
+      - name: "List all files"
+        run: ls -R
+      - name: "Add nojekyll"
+        run: touch ./CursorConverter.Browser/bin/Release/net8.0-browser/browser-wasm/AppBundle/.nojekyll
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: './CursorConverter.Browser/bin/Release/net8.0-browser/browser-wasm/AppBundle'
+      - name: Deploy artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+    
+  release:
+      strategy:
+        matrix:
+          dotnet-version: [ '8.0.x' ]
+        fail-fast: false
+      runs-on: [ self-hosted ]
+      needs: [build]
+      if: false #${{ needs.build.result == 'success' }}
+      steps:
+      - uses: actions/checkout@v3
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Restore dependencies
+        run: | 
+          dotnet workload restore
+          dotnet restore
+      - name: Publish
+        run: |
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-x86 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime win-arm64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime linux-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime linux-arm64 --self-contained 
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime osx-x64 --self-contained
+          dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release --runtime osx-arm64 --self-contained
+      - name: "List all files"
+        run: |
+          echo $PWD
+          ls -R
+      - name: "Rename based on architecture"
+        run: |
+          mkdir "/home/runner/work/CursorConverter/CursorConverter/publish"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x64/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-x86/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-arm64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/linux-x64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-x64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/osx-arm64/publish/CursorConverter.Desktop" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-osx-arm64"
+          mv "/home/runner/work/CursorConverter/CursorConverter/CursorConverter.Desktop/bin/Release/net8.0/win-arm64/publish/CursorConverter.Desktop.exe" "/home/runner/work/CursorConverter/CursorConverter/publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe"
+      - name: "Delete old release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list > releases.txt
+          cat releases.txt
+          version="${{ env.VERSION }}"
+          echo $version
+          if grep $version releases.txt; then
+            echo wasfound
+            gh release delete $version
+          else
+            echo "notfound"
+          fi
+
+      - name: "Create new release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ env.VERSION }}" --target master --title "Build ${{ env.VERSION }}" # --generate-notes
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-x64-${{ matrix.dotnet-version }}.exe" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-x86-${{ matrix.dotnet-version }}.exe" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-linux-arm64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-linux-x64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-osx-x64-${{ matrix.dotnet-version }}" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-osx-arm64" --clobber
+          gh release upload "${{ env.VERSION }}" "./publish/CursorConverter-win-arm64-${{ matrix.dotnet-version }}.exe" --clobber
+
+
+
+  pupnet:
+      strategy:
+        matrix:
+          dotnet-version: [ '8.0.x' ]
+        fail-fast: false
+      runs-on: [ self-hosted ]
+      needs: [release]
+      if: ${{ needs.release.result == 'success' }}
+      steps:
+      - uses: actions/checkout@v3
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Setup dependencies
+        run: |
+          sudo apt-get -y install dpkg rpm flatpak flatpak-builder pandoc
+          sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y flathub org.freedesktop.Platform//23.08 org.freedesktop.Sdk//23.08
+          dotnet tool install -g KuiperZone.PupNet
+      - name: Restore dependencies
+        run: |
+          dotnet workload restore
+          dotnet restore
+      - name: Publish
+        run: |
+          # dotnet publish CursorConverter.csproj --configuration Release --runtime win-x64 --self-contained
+          # runtime: [ 'linux-x64', 'linux-arm64' ]
+          # kind: [ 'appimage', 'deb', 'rpm', 'flatpak' ]
+          pupnet --runtime linux-x64 --kind appimage --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-x64 --kind deb --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-x64 --kind rpm --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-x64 --kind flatpak --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-arm64 --kind appimage --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-arm64 --kind deb --build Release --app-version ${{ env.VERSION }} --verbose
+          # pupnet --runtime linux-arm64 --kind rpm --build Release --app-version ${{ env.VERSION }} --verbose
+          pupnet --runtime linux-arm64 --kind flatpak --build Release --app-version ${{ env.VERSION }} --verbose
+      - name: "List all files"
+        run: |
+          echo $PWD
+          ls -R
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/CursorConverter-${{ env.VERSION }}-1.aarch64.flatpak --clobber         
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/CursorConverter-${{ env.VERSION }}-1.x86_64.flatpak --clobber
+
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/CursorConverter-${{ env.VERSION }}-1.x86_64.AppImage --clobber
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/CursorConverter-${{ env.VERSION }}-1.aarch64.AppImage --clobber
+
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1.x86_64.rpm --clobber
+
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1_amd64.deb --clobber
+          gh release upload "${{ env.VERSION }}" ./pupnet/out/cursorconverter_${{ env.VERSION }}-1_arm64.deb --clobber            
