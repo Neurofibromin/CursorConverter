@@ -44,6 +44,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
+    needs: [build]
     strategy:
       matrix:
         os: [ ubuntu-latest ]
