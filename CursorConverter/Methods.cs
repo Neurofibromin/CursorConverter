@@ -53,7 +53,7 @@ namespace CursorConverter
             if (File.Exists(file))
             {
                 string extension = Path.GetExtension(file);
-                extension = Strings.LCase(extension);
+                extension = extension.ToLower();
                 extension = extension.Substring(1);
                 //Ani, Ico, XCursor, Cur, Png, Jpg, hyprcursor, CursorFX, CurXPTheme,
                 switch (extension)

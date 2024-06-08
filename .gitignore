@@ -8,7 +8,7 @@ releases.txt
 *.xcg
 *.cur
 *.png
-*.jpg
+# *.jpg
 *.hyprcursor
 *.cursorfx
 *.curxptheme

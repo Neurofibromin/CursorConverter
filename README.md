@@ -2,6 +2,8 @@
 
 A program to convert mouse cursors between formats.
 
+![preview image](/readme-images/screenshot_1.JPG)
+
 ## Aims:
 
 Convert **from** and **to**:
@@ -31,8 +33,9 @@ Convert **from** and **to**:
 | cursorfx                 |		 	|     	|     	|   	|		|		|			|			|			|
 | curxptheme               |		 	|     	|     	|   	|		|		|			|			|			|
 
+7/81
 
-## Releases
+## Standalone Releases (portable)
 
 | | Windows  | Linux | OSX (semi-supported) |
 | ---- | ------------- | ------------- | ------------- |
@@ -41,7 +44,9 @@ Convert **from** and **to**:
 | arm64 (aarch64) | [CursorConverter-win-arm64-8.0.x.exe](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-win-arm64-8.0.x.exe) | [CursorConverter-linux-arm64-8.0.x](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-linux-arm64-8.0.x) | [CursorConverter-osx-arm64](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-osx-arm64) |
 
 
-Additional releases:
+### Additional releases:
+Linux Installers: <br/>
+
 | package  | x64 | arm64 |
 | ------------- | ------------- | ------------- |
 | Flatpak	|		[CursorConverter-0.1.3-1.x86_64.flatpak](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.x86_64.flatpak)		|	[CursorConverter-0.1.3-1.aarch64.flatpak](https://github.com/Neurofibromin/CursorConverter/releases/download/0.1.3/CursorConverter-0.1.3-1.aarch64.flatpak)			|
@@ -52,6 +57,17 @@ Additional releases:
 
 ### Status
 [![.NET](https://github.com/Neurofibromin/CursorConverter/actions/workflows/master.yml/badge.svg)](https://github.com/Neurofibromin/CursorConverter/actions/workflows/master.yml)
+
+## Build instructions
+Install dependencies: [dotnet](https://dotnet.microsoft.com/en-us/download)
+```
+git clone https://github.com/Neurofibromin/CursorConverter CursorConverter
+cd CursorConverter
+dotnet restore
+dotnet publish CursorConverter.sln --configuration Release
+# or to publish only the desktop app:
+# dotnet publish CursorConverter.Desktop/CursorConverter.Desktop.csproj --configuration Release
+```
 
 
 ## On the shoulders of giants:
@@ -69,6 +85,7 @@ The following projects gave me inspiration, in many cases I reimplemented their 
 - [xcur2png](https://github.com/eworm-de/xcur2png) maintained by eworm-de
 - [hyprcursor](https://github.com/hyprwm/hyprcursor) from the Hypr project
 - [hyprlang](https://github.com/hyprwm/hyprlang) from the Hypr project
+- [libxcursor](https://gitlab.freedesktop.org/xorg/lib/libxcursor)
 
 
 Similar projects:
